@@ -70,6 +70,7 @@ loja-online-fake/
 ## 👤 Autor
 
 - Gustavo Tessaro
+- Lucas Bleyer
 
 ## 📝 Licença
 
@@ -77,4 +78,4 @@ Este projeto está sob a licença MIT.
 
 ---
 
-Desenvolvido com por Gustavo Tessaro e Lucas Bleyer
+Desenvolvido por Gustavo Tessaro e Lucas Bleyer
