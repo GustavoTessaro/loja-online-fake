@@ -29,7 +29,7 @@ const App = () => {
           padding: "20px 0",
         }}
       >
-        IFSC ©2025 — Desenvolvido por [Seu Nome]
+        IFSC ©2025 — Desenvolvido por Gustavo Tessaro e Lucas Oliveira Bleyer
       </Footer>
     </Layout>
   );
