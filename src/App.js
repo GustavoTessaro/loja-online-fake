@@ -23,18 +23,17 @@ const App = () => {
           <ProductsPage />
         </Content>
 
-        <Footer
-          style={{
-            textAlign: "center",
-            background: "#001529",
-            color: "#fff",
-            padding: "20px 0",
-          }}
-        >
-          IFSC ©2025 — Desenvolvido por Gustavo Tessaro
-        </Footer>
-      </Layout>
-    </AuthProvider>
+      <Footer
+        style={{
+          textAlign: "center",
+          background: "#001529",
+          color: "#fff",
+          padding: "20px 0",
+        }}
+      >
+        IFSC ©2025 — Desenvolvido por Gustavo Tessaro e Lucas Oliveira Bleyer
+      </Footer>
+    </Layout>
   );
 };
 
