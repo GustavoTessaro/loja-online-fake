@@ -1,6 +1,7 @@
 import React from "react";
 import { Layout } from "antd";
 import { AuthProvider } from "./context/AuthContext";
+import { SearchProvider } from "./context/SearchContext";
 import HeaderBar from "./components/HeaderBar";
 import ProductsPage from "./components/ProductsPage";
 
@@ -9,7 +10,8 @@ const { Content, Footer } = Layout;
 const App = () => {
   return (
     <AuthProvider>
-      <Layout style={{ minHeight: "100vh", background: "#f9f9f9" }}>
+      <SearchProvider>
+        <Layout style={{ minHeight: "100vh", background: "#f9f9f9" }}>
         <HeaderBar />
 
         <Content
@@ -33,7 +35,8 @@ const App = () => {
       >
         IFSC ©2025 — Desenvolvido por Gustavo Tessaro e Lucas Oliveira Bleyer
       </Footer>
-    </Layout>
+        </Layout>
+      </SearchProvider>
     </AuthProvider>
   );
 };

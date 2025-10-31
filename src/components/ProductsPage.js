@@ -10,13 +10,15 @@ import {
   Modal, 
   Form,
   notification,
-  Space 
+  theme,
+  Select,
+  InputNumber
 } from 'antd';
 import { PlusOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { useAuth } from '../context/AuthContext';
+import { useSearch } from '../context/SearchContext';
 
 const { Title, Text } = Typography;
-const { Search } = Input;
 
 const fallbackImage = 'https://via.placeholder.com/200x200?text=Imagem+Indisponível';
 
@@ -24,9 +26,10 @@ const ProductsPage = () => {
   const { user } = useAuth();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const { searchTerm } = useSearch();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     fetchProducts();
@@ -38,6 +41,9 @@ const ProductsPage = () => {
       const data = await response.json();
       const storedProducts = JSON.parse(localStorage.getItem('products') || '[]');
       setProducts([...data, ...storedProducts]);
+      // extrair categorias únicas para o select
+      const cats = Array.from(new Set(data.map(p => p.category).filter(Boolean)));
+      setCategories(cats);
       setLoading(false);
     } catch (error) {
       console.error('Erro ao buscar produtos:', error);
@@ -77,8 +83,9 @@ const ProductsPage = () => {
   };
 
   const filteredProducts = products.filter(product =>
-    product.title.toLowerCase().includes(searchTerm.toLowerCase())
+    product.title.toLowerCase().includes((searchTerm || '').toLowerCase())
   );
+  const { token } = theme.useToken();
 
   return (
     <div style={{ width: '100%', maxWidth: 1200, margin: '0 auto' }}>
@@ -96,62 +103,88 @@ const ProductsPage = () => {
           </Flex>
         )}
 
-        <Search
-          placeholder="Buscar produtos..."
-          onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ maxWidth: 400 }}
-        />
+        {/* search moved to header */}
 
         <List
           loading={loading}
-          itemLayout="vertical"
-          size="large"
+          grid={{ gutter: 24, xs: 1, sm: 2, md: 3, lg: 3, xl: 4, xxl: 4 }}
           dataSource={filteredProducts}
-          renderItem={(product) => (
-            <List.Item
-              key={product.id}
-              extra={
-                <Image
-                  width={200}
-                  alt={product.title}
-                  src={product.image}
-                  fallback={fallbackImage}
-                />
-              }
-              actions={[
-                <Space key="actions">
-                  <Rate disabled defaultValue={product.rating?.rate || 0} />
-                  <Text>({product.rating?.count || 0} avaliações)</Text>
-                </Space>,
-                <Button
-                  key="buy"
-                  type="primary"
-                  icon={<ShoppingCartOutlined />}
-                  onClick={() => handleBuyClick(product.title)}
+          renderItem={(product) => {
+            const src = typeof product.image === 'string' && /^https?:\/\//i.test(product.image)
+              ? product.image
+              : fallbackImage;
+
+            return (
+              <List.Item key={product.id}>
+                <div
+                  style={{
+                    border: `1px solid ${token.colorBorder}`,
+                    borderRadius: token.borderRadius,
+                    padding: 16,
+                    background: token.colorBgContainer,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: '100%'
+                  }}
                 >
-                  Comprar
-                </Button>
-              ]}
-            >
-              <List.Item.Meta
-                title={<Title level={4}>{product.title}</Title>}
-                description={product.description}
-              />
-              <Title level={3} style={{ color: '#1890ff' }}>
-                R$ {Number(product.price).toFixed(2)}
-              </Title>
-            </List.Item>
-          )}
+                  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', paddingBottom: 12 }}>
+                    <Image
+                      width={180}
+                      height={160}
+                      alt={product.title}
+                      src={src}
+                      preview={false}
+                      fallback={fallbackImage}
+                      onError={(e) => {
+                        try {
+                          const img = e?.currentTarget || e?.target;
+                          if (img) {
+                            img.onerror = null;
+                            img.src = fallbackImage;
+                          }
+                        } catch (err) {
+                          // noop
+                        }
+                      }}
+                      style={{ objectFit: 'contain', maxHeight: 160 }}
+                    />
+                  </div>
+
+                  <div style={{ padding: '0 6px', marginBottom: 8 }}>
+                    <Title level={4} style={{ margin: '6px 0' }}>{product.title}</Title>
+                    <Text type="secondary" style={{ display: 'block', height: 48, overflow: 'hidden' }}>{product.description}</Text>
+                  </div>
+
+                  <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 12 }}>
+                    <div>
+                      <Rate disabled defaultValue={product.rating?.rate || 0} />
+                      <Text style={{ marginLeft: 6 }}>({product.rating?.count || 0})</Text>
+                    </div>
+
+                    <div style={{ width: 180, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                      <Title level={5} style={{ color: token.colorPrimary, margin: 0, textAlign: 'right' }}>
+                        R$ {Number(product.price).toFixed(2)}
+                      </Title>
+                      <Button type="primary" block icon={<ShoppingCartOutlined />} onClick={() => handleBuyClick(product.title)} style={{ borderRadius: token.borderRadius }}>
+                        Comprar
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </List.Item>
+            );
+          }}
         />
       </Flex>
 
       <Modal
         title="Adicionar Novo Produto"
         open={isModalVisible}
-        onOk={form.submit}
         onCancel={() => setIsModalVisible(false)}
         maskClosable={false}
         keyboard={false}
+        width={520}
+        footer={null}
       >
         <Form
           form={form}
@@ -160,34 +193,59 @@ const ProductsPage = () => {
         >
           <Form.Item
             name="title"
-            label="Título"
-            rules={[{ required: true, message: 'Por favor, insira o título do produto' }]}
+            label="Title"
+            rules={[{ required: true, message: 'Please enter the product title' }]}
           >
             <Input />
           </Form.Item>
-          
+
           <Form.Item
             name="description"
-            label="Descrição"
-            rules={[{ required: true, message: 'Por favor, insira a descrição do produto' }]}
+            label="Description"
+            rules={[{ required: true, message: 'Please enter the product description' }]}
           >
-            <Input.TextArea />
+            <Input.TextArea rows={4} />
           </Form.Item>
-          
+
+          <Form.Item
+            name="category"
+            label="Category"
+            rules={[{ required: true, message: 'Please select a category' }]}
+          >
+            <Select placeholder="Select category">
+              {categories.map(cat => (
+                <Select.Option key={cat} value={cat}>{cat}</Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+
           <Form.Item
             name="price"
-            label="Preço"
-            rules={[{ required: true, message: 'Por favor, insira o preço do produto' }]}
+            label="Price"
+            rules={[{ required: true, message: 'Please enter the product price' }]}
           >
-            <Input type="number" step="0.01" />
+            <InputNumber
+              style={{ width: '100%' }}
+              min={0}
+              step={0.01}
+              formatter={value => `$ ${value}`}
+              parser={value => value.replace(/\$\s?|(,*)/g, '')}
+            />
           </Form.Item>
-          
+
           <Form.Item
             name="image"
-            label="URL da Imagem"
-            rules={[{ required: true, message: 'Por favor, insira a URL da imagem' }]}
+            label="Image"
+            rules={[{ required: true, message: 'Please enter the image URL' }]}
           >
-            <Input />
+            <Input placeholder="URL image" />
+          </Form.Item>
+
+          <Form.Item>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Button onClick={() => setIsModalVisible(false)}>Cancel</Button>
+              <Button type="primary" onClick={() => form.submit()}>Save</Button>
+            </div>
           </Form.Item>
         </Form>
       </Modal>

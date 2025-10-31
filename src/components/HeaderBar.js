@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { Layout, Menu, Space, Button, Modal, Form, Input, Typography, Dropdown } from "antd";
+import { Layout, Space, Button, Modal, Form, Input, Typography, Dropdown } from "antd";
 import {
   ShoppingCartOutlined,
   LoginOutlined,
   LogoutOutlined,
+  SearchOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import { useSearch } from '../context/SearchContext';
 import { useAuth } from "../context/AuthContext";
 
 const { Header } = Layout;
@@ -15,6 +17,7 @@ const HeaderBar = () => {
   const { user, login, logout } = useAuth();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
+  const { setSearchTerm } = useSearch();
 
   const handleLogin = async (values) => {
     // Simular uma chamada à API
@@ -54,45 +57,35 @@ const HeaderBar = () => {
   return (
     <Header
       style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        backgroundColor: "#e6f0ff",
-        padding: "0 40px",
-        height: 70,
+        display: 'grid',
+        gridTemplateColumns: '220px 1fr 220px',
+        alignItems: 'center',
+        backgroundColor: '#eaf4ff',
+        padding: '0 24px',
+        height: 72,
       }}
     >
-      {/* Logo */}
-      <div
-        style={{
-          fontWeight: "bold",
-          fontSize: "22px",
-          color: "#ff6600",
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-        }}
-      >
-        🛒 <span style={{ color: "#000" }}>Online Shop</span>
+      {/* Logo + Home + Products */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <img src="/logo.png" alt="Online Shop" style={{ height: 46 }} onError={(e) => { try { e.currentTarget.src = '/favicon.ico'; } catch (err) {} }} />
+        <Button type="link" style={{ fontWeight: 600, color: '#0a58ca' }}>Home</Button>
+        <Button type="link" style={{ fontWeight: 600, color: '#0a58ca' }}>Products</Button>
       </div>
 
-      {/* Menu */}
-      <Menu
-        mode="horizontal"
-        defaultSelectedKeys={["products"]}
-        items={[
-          { key: "home", label: "Home" },
-          { key: "products", label: "Produtos" }
-        ]}
-        style={{
-          borderBottom: "none",
-          background: "transparent",
-          fontWeight: 500,
-        }}
-      />
+      {/* Center: search */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, justifyContent: 'center' }}>
+        <Input.Search
+          placeholder="Find Product"
+          prefix={<SearchOutlined />}
+          style={{ width: 360, borderRadius: 6 }}
+          onSearch={(value) => setSearchTerm(value)}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
 
-      {/* Botões Login e Carrinho */}
-      <Space>
+      {/* Right: user and cart */}
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Space>
         {user ? (
           <>
             <Dropdown
@@ -121,8 +114,8 @@ const HeaderBar = () => {
         >
           Cart
         </Button>
-      </Space>
-
+        </Space>
+      </div>
       <Modal
         title="Login"
         open={isModalVisible}
