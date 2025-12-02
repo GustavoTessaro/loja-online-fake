@@ -1,0 +1,24 @@
+.homeBody {
+  margin-top: 5rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.titulo {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  color: rgb(255, 94, 0);
+}
+
+.subtitulo {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  color: #555;
+}
+
+.produtos {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
