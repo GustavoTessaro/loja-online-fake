@@ -6,6 +6,7 @@ interface Client {
   email: string;
   phone: string;
   address: string;
+  status: string;
 }
 
 const initialState = {
@@ -24,8 +25,12 @@ const clientsSlice = createSlice({
         state.list.push(action.payload);
         save(state);
       },
-      prepare(client) {
-        return { payload: { id: nanoid(), ...client } };
+      prepare(client: Omit<Client, "id">) {
+        return { 
+          payload: { id: nanoid(), ...client },
+          meta: undefined,
+          error: undefined,
+        };
       },
     },
     updateClient(state, action) {

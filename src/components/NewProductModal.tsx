@@ -68,7 +68,7 @@ export const NewProductModal: React.FC<NewProductModalProps> = ({
         initialValues={{}}
       >
         <Form.Item
-          name="Título"
+          name="title"
           label="Título"
           rules={[{ required: true, message: "Informe o título do produto" }]}
         >
@@ -76,7 +76,7 @@ export const NewProductModal: React.FC<NewProductModalProps> = ({
         </Form.Item>
 
         <Form.Item
-          name="Descrição"
+          name="description"
           label="Descrição"
           rules={[{ required: true, message: "Informe a descrição do produto" }]}
         >
@@ -84,7 +84,7 @@ export const NewProductModal: React.FC<NewProductModalProps> = ({
         </Form.Item>
 
         <Form.Item
-          name="Categoria"
+          name="category"
           label="Categoria"
           rules={[{ required: true, message: "Informe a categoria do produto" }]}
         >
@@ -97,7 +97,7 @@ export const NewProductModal: React.FC<NewProductModalProps> = ({
         </Form.Item>
 
         <Form.Item
-          name="Preço"
+          name="price"
           label="Preço"
           rules={[{ required: true, message: "Informe o preço do produto" }]}
         >
@@ -111,7 +111,7 @@ export const NewProductModal: React.FC<NewProductModalProps> = ({
         </Form.Item>
 
         <Form.Item
-          name="Imagem"
+          name="image"
           label="Imagem"
           rules={[{ type: "url", warningOnly: true }]}
         >

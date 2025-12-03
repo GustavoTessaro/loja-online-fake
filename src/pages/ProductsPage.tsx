@@ -6,11 +6,9 @@ import {
   Col,
   Button,
   Typography,
-  Grid,
   notification,
   Image,
   Rate,
-  Input,
   Popconfirm,
   Space,
 } from "antd";
@@ -31,22 +29,19 @@ import {
   updateProduct,
   deleteProduct,
 } from "../store/productsSlice";
-import { addToCart } from "../store/cartSlice";
+import { addToCart, removeFromCart } from "../store/cartSlice";
 
 const { Title, Paragraph, Text } = Typography;
-const { useBreakpoint } = Grid;
-const { Search } = Input;
 
 export const ProductsPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const reduxProducts = useSelector((s: RootState) => s.products);
+  const reduxProducts = useSelector((s: RootState) => s.products || []);
   const [apiProducts, setApiProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [productToEdit, setProductToEdit] = useState<Product | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const screens = useBreakpoint();
 
   useEffect(() => {
     setLoading(true);
@@ -68,8 +63,8 @@ export const ProductsPage: React.FC = () => {
     [reduxProducts, apiProducts]
   );
 
-  const filteredProducts = mergedProducts.filter((p) =>
-    p.title.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredProducts = mergedProducts.filter(
+    (p) => p && p.title && p.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleSaveLocalProduct = (p: Product) => {
@@ -83,7 +78,7 @@ export const ProductsPage: React.FC = () => {
         productId: p.id,
         title: p.title,
         price: p.price,
-        image: p.image,
+        image: p.image || "",
       })
     );
     notification.success({
@@ -104,6 +99,7 @@ export const ProductsPage: React.FC = () => {
 
   const handleDelete = (id: number | string) => {
     dispatch(deleteProduct(id));
+    dispatch(removeFromCart(id));
     notification.success({ message: "Produto excluído com sucesso!" });
   };
 
@@ -128,7 +124,7 @@ export const ProductsPage: React.FC = () => {
       ) : (
         <List
           grid={{ gutter: 24, xs: 12, sm: 8, md: 6, lg: 4, xl: 3 }}
-          dataSource={filteredProducts}
+          dataSource={filteredProducts || []}
           locale={{ emptyText: "Nenhum produto encontrado" }}
           renderItem={(item) => (
             <List.Item>
@@ -144,7 +140,7 @@ export const ProductsPage: React.FC = () => {
                 }}
               >
                 <Image
-                  src={item.image}
+                  src={item.image || ""}
                   alt={item.title}
                   fallback="/assets/default-product.png"
                   style={{

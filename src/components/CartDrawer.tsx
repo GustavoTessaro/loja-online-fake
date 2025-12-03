@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Drawer,
   List,
@@ -11,8 +11,9 @@ import {
   Row,
   Col,
   Typography,
+  Modal,
 } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
 import {
   removeFromCart,
@@ -30,6 +31,8 @@ interface CartDrawerProps {
 export default function CartDrawer({ open, onClose }: CartDrawerProps) {
   const items = useSelector((s: any) => s.cart.items);
   const dispatch = useDispatch();
+  const [successModalOpen, setSuccessModalOpen] = useState(false);
+  const [totalAmount, setTotalAmount] = useState(0);
 
   const total = items.reduce((sum: number, item: any) => sum + item.price * item.qty, 0);
 
@@ -38,9 +41,9 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
       message.warning("Carrinho vazio");
       return;
     }
+    setTotalAmount(total);
     dispatch(clearCart());
-    message.success("Compra finalizada com sucesso! Obrigado!");
-    onClose();
+    setSuccessModalOpen(true);
   };
 
   const handleRemove = (productId: number | string) => {
@@ -60,7 +63,48 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
   };
 
   return (
-    <Drawer
+    <>
+      <Modal
+        title="Compra Finalizada!"
+        open={successModalOpen}
+        footer={[
+          <Button
+            key="ok"
+            type="primary"
+            onClick={() => {
+              setSuccessModalOpen(false);
+              onClose();
+            }}
+          >
+            Continuar Comprando
+          </Button>,
+        ]}
+        centered
+        closable={false}
+      >
+        <div style={{ textAlign: "center", padding: "20px 0" }}>
+          <CheckCircleOutlined
+            style={{ fontSize: 48, color: "#52c41a", marginBottom: 16 }}
+          />
+          <h2 style={{ marginBottom: 16 }}>Compra Realizada com Sucesso!</h2>
+          <p style={{ marginBottom: 8, fontSize: 16 }}>
+            Obrigado por sua compra!
+          </p>
+          <p style={{ fontSize: 14, color: "#666" }}>
+            Você receberá um email de confirmação em breve.
+          </p>
+          <Divider />
+          <Row justify="center">
+            <Col>
+              <Text strong style={{ fontSize: 18 }}>
+                Total da Compra: R$ {totalAmount.toFixed(2)}
+              </Text>
+            </Col>
+          </Row>
+        </div>
+      </Modal>
+
+      <Drawer
       title="Carrinho de Compras"
       width={450}
       onClose={onClose}
@@ -168,5 +212,6 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
         </>
       )}
     </Drawer>
+    </>
   );
 }

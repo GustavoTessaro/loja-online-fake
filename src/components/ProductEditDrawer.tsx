@@ -39,7 +39,8 @@ export const ProductEditDrawer: React.FC<Props> = ({
       title: values.title,
       description: values.description,
       price: Number(values.price),
-      image: values.image,
+      image: values.image || "",
+      category: product?.category || "uncategorized",
       rating: {
         rate: Number(values.rating) || 0,
         count: product?.rating?.count ?? 0,
@@ -72,26 +73,26 @@ export const ProductEditDrawer: React.FC<Props> = ({
         </Form.Item>
 
         <Form.Item
-          name="Titulo"
+          name="title"
           label="Titulo"
           rules={[{ required: true, message: "Informe o título" }]}
         >
           <Input />
         </Form.Item>
 
-        <Form.Item name="Descrição" label="Descrição">
+        <Form.Item name="description" label="Descrição">
           <Input.TextArea rows={4} />
         </Form.Item>
 
         <Form.Item
-          name="Preço"
+          name="price"
           label="Preço"
           rules={[{ required: true, message: "Informe o preço" }]}
         >
           <InputNumber style={{ width: "100%" }} min={0} />
         </Form.Item>
 
-        <Form.Item name="Imagem" label="Imagem URL">
+        <Form.Item name="image" label="Imagem URL">
           <Input />
         </Form.Item>
 
