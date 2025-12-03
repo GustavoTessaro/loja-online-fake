@@ -1,7 +1,8 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Table, Button, Space, Popconfirm, Input, Typography, message } from "antd";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteClient } from "../store/clientsSlice";
+import { deleteClient, addClient } from "../store/clientsSlice";
+import { getClients } from "../services/clients";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import ClientDrawerForm from "../components/ClientDrawerForm";
 
@@ -25,6 +26,43 @@ export function ClientsPage() {
         c.phone.toLowerCase().includes(q)
     );
   }, [clients, query]);
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const apiClients: any[] = await getClients(8);
+        if (!mounted) return;
+        let added = 0;
+        apiClients.forEach((u) => {
+          const exists = clients.some((c: any) => c.email === u.email);
+          if (!exists) {
+            const address = u.address
+              ? `${u.address.street || ''} ${u.address.suite || ''} - ${u.address.city || ''}`.trim()
+              : '';
+            try {
+              dispatch(
+                addClient({
+                  name: u.name || u.username || 'Cliente',
+                  email: u.email || '',
+                  phone: u.phone || '',
+                  address,
+                  status: 'active',
+                })
+              );
+              added += 1;
+            } catch (e) {}
+          }
+        });
+        if (added > 0) {
+          message.success(`${added} cliente(s) adicionados a partir da API.`);
+        }
+      } catch (e) {
+        // ignore fetch errors
+      }
+    })();
+    return () => { mounted = false };
+  }, []);
 
   const columns = [
     { title: "Nome", dataIndex: "name", key: "name" },

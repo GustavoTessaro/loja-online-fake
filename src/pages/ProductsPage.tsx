@@ -82,6 +82,16 @@ export const ProductsPage: React.FC = () => {
   };
 
   const handleBuy = (p: Product) => {
+    const rawUser = localStorage.getItem('current_user');
+    if (!rawUser) {
+      window.dispatchEvent(new CustomEvent('open-login'));
+      notification.warning({
+        message: 'Faça login',
+        description: 'Você precisa estar logado para adicionar produtos ao carrinho.',
+      });
+      return;
+    }
+
     dispatch(
       addToCart({
         productId: p.id,

@@ -41,6 +41,14 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
       message.warning("Carrinho vazio");
       return;
     }
+
+    const rawUser = localStorage.getItem('current_user');
+    if (!rawUser) {
+      window.dispatchEvent(new CustomEvent('open-login'));
+      message.warning('Faça login para finalizar a compra');
+      return;
+    }
+
     setTotalAmount(total);
     dispatch(clearCart());
     setSuccessModalOpen(true);
