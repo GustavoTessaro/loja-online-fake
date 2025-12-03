@@ -3,7 +3,10 @@ import {
   ShoppingCartOutlined,
   UserOutlined,
   SearchOutlined,
+  BulbOutlined,
+  MoonOutlined,
 } from "@ant-design/icons";
+import { useTheme } from '../context/ThemeContext';
 import { Badge, Modal, Form, Input, Button, notification, message, Avatar, Space, Typography } from "antd";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -54,6 +57,13 @@ export const Header: React.FC = () => {
   }, [location]);
 
   const openLogin = () => setLoginOpen(true);
+  const { theme, toggle } = (() => {
+    try {
+      return useTheme();
+    } catch {
+      return { theme: 'light', toggle: () => {} } as any;
+    }
+  })();
 
   const handleLogout = () => {
     try {
@@ -256,6 +266,9 @@ export const Header: React.FC = () => {
 
         {/* Login + Cart */}
         <nav style={{ display: "flex", gap: "1.5rem", alignItems: "center" }}>
+          <button onClick={() => toggle()} title="Alternar tema" style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontSize: '1rem' }}>
+            {theme === 'dark' ? <BulbOutlined /> : <MoonOutlined />}
+          </button>
           {currentUser ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <button onClick={openProfile} style={{ background: 'none', border: 'none', color: '#1677ff', cursor: 'pointer', fontSize: '1rem' }}>

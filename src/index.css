@@ -4,12 +4,31 @@
   line-height: 1.5;
   font-weight: 400;
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #ffffff;
+  /* color variables for theming */
+  --bg: #ffffff;
+  --text: #213547;
+  --muted: #666666;
+  --primary: #1677ff;
+  --card: #ffffff;
+  --header-bg: #e6f4ff;
+  --button-bg: #f9f9f9;
+  color: var(--text);
+  background-color: var(--bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* dark theme overrides (added via ThemeProvider toggling class on <html>) */
+.theme-dark {
+  --bg: #0f1720;
+  --text: #e6eef6;
+  --muted: #9aa6b2;
+  --primary: #4f8cff;
+  --card: #0b1116;
+  --header-bg: #071127;
+  --button-bg: #0b1220;
 }
 
 html,
@@ -28,6 +47,21 @@ body,
 body {
   min-width: 320px;
   min-height: 100vh;
+}
+
+/* apply variables */
+body {
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+header {
+  background: var(--header-bg) !important;
+}
+
+button {
+  background-color: var(--button-bg);
+  color: var(--text);
 }
 
 a {
