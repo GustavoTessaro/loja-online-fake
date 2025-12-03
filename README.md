@@ -54,7 +54,6 @@ Navegação feita por um **header fixo**.
 ---
 
 # 📦 Instalação das Dependências + 🚀 Como Rodar  
-*(TUDO JUNTO, SEM QUEBRA)*
 
 ```bash
 # 1️⃣ Clonar o projeto
