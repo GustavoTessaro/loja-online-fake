@@ -1,7 +1,9 @@
-# 🛒 Loja Online — Trabalho Prático II Gustavo Tessaro e Lucas Oliveira Bleyer
+# 🛒 Loja Online — Trabalho Prático II  
+**Gustavo Tessaro e Lucas Oliveira Bleyer**
 
 ## 📌 Objetivo
-Este projeto tem como objetivo integrar os conteúdos desenvolvidos nas atividades anteriores da disciplina, resultando na implementação de uma Loja Online utilizando React, Redux e Ant Design. A aplicação reúne funcionalidades de HomePage, Products e Clients, adicionando novos recursos como edição de produtos, carrinho de compras e tema dinâmico.
+Este projeto integra os conteúdos desenvolvidos ao longo da disciplina, resultando na implementação completa de uma Loja Online utilizando **React**, **Redux Toolkit**, **Ant Design** e **Fake Store API**.  
+A aplicação inclui HomePage, Products, Clients, carrinho de compras, edição de dados e tema dinâmico.
 
 ---
 
@@ -9,53 +11,58 @@ Este projeto tem como objetivo integrar os conteúdos desenvolvidos nas atividad
 
 ### 1. Estrutura Geral
 A aplicação contém três páginas principais:
+- **HomePage** — lista os cinco produtos principais.
+- **Products** — exibe todos os produtos, com CRUD completo.
+- **Clients** — lista, cadastra e edita clientes.
 
-- **HomePage**: exibe os cinco produtos principais da Fake Store API.
-- **Products**: lista de produtos com busca, cadastro, edição e exclusão.
-- **Clients**: listagem, cadastro e edição de clientes.
-
-A navegação é feita através de um header fixo.
+Navegação feita por um **header fixo**.
 
 ---
 
 ## 🔧 Funcionalidades Implementadas
 
 ### a) Edição e Exclusão de Produtos
-- Botões de editar e excluir para cada item.
-- Edição via Drawer com dados carregados.
-- Exclusão com Popconfirm.
-- Persistência via LocalStorage + Redux.
-- Lista atualiza automaticamente.
+- Botões de editar e excluir.
+- Drawer com formulário carregando dados do produto.
+- Popconfirm para confirmar exclusão.
+- Persistência via **LocalStorage + Redux Toolkit**.
 
 ### b) Carrinho de Compras
-- Componente de carrinho integrado ao header.
+- Carrinho integrado ao header.
 - Adicionar produtos via botão **Buy**.
-- Exibição de itens, quantidades e valor total.
+- Drawer lateral para exibir itens do carrinho.
+- Quantidades, valores e total calculado.
 - Remover itens individualmente.
-- Finalizar compra (mensagem de sucesso).
-- Limpar carrinho.
-- Persistência via LocalStorage.
-- Exibição em Drawer.
+- Limpar carrinho / finalizar compra.
+- Persistência automática em **LocalStorage**.
 
-### c) Integração Visual e Tema
-- Layout padronizado utilizando Ant Design.
-- Tema claro e escuro (dark/light).
-- Interface totalmente responsiva.
+### c) Tema Claro/Escuro
+- Integração nativa com Ant Design.
+- Comutador de tema no header.
+- Persistência em LocalStorage.
 
 ---
 
 ## 📦 Tecnologias Utilizadas
-- React + Vite  
-- TypeScript  
-- Redux Toolkit  
-- Ant Design  
-- Fake Store API  
-- LocalStorage  
+- **React + Vite**  
+- **TypeScript**  
+- **Redux Toolkit**  
+- **Ant Design (AntD)**  
+- **Fake Store API**  
+- **LocalStorage**  
 
 ---
 
-## ▶️ Como Executar o Projeto
+# 📦 Instalação das Dependências + 🚀 Como Rodar  
+*(TUDO JUNTO, SEM QUEBRA)*
 
-### 1. Instalar dependências:
 ```bash
+# 1️⃣ Clonar o projeto
+git clone https://github.com/seu-repo/aqui.git
+cd nome-do-projeto
+
+# 2️⃣ Instalar TODAS as dependências
 npm install
+
+# 3️⃣ Rodar o servidor
+npm run dev
