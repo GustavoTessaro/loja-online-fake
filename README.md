@@ -12,10 +12,8 @@ A aplicação inclui HomePage, Products, Clients, carrinho de compras, edição 
 ### 1. Estrutura Geral
 A aplicação contém três páginas principais:
 - **HomePage** — lista os cinco produtos principais.
-- **Products** — exibe todos os produtos, com CRUD completo.
+- **Products** — exibe todos os produtos, com CRUD completo e adiciona ao Carrinho
 - **Clients** — lista, cadastra e edita clientes.
-
-Navegação feita por um **header fixo**.
 
 ---
 
@@ -35,11 +33,6 @@ Navegação feita por um **header fixo**.
 - Remover itens individualmente.
 - Limpar carrinho / finalizar compra.
 - Persistência automática em **LocalStorage**.
-
-### c) Tema Claro/Escuro
-- Integração nativa com Ant Design.
-- Comutador de tema no header.
-- Persistência em LocalStorage.
 
 ---
 
