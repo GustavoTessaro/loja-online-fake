@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ShoppingCartOutlined,
   UserOutlined,
@@ -6,6 +6,7 @@ import {
 } from "@ant-design/icons";
 import { Badge } from "antd";
 import { useSelector } from "react-redux";
+import { useNavigate, useLocation } from 'react-router-dom';
 import logo from "../assets/logo.png";
 import CartDrawer from "./CartDrawer";
 
@@ -13,6 +14,16 @@ export const Header: React.FC = () => {
   const [cartOpen, setCartOpen] = useState(false);
   const cartItems = useSelector((s: any) => s.cart.items);
   const cartCount = cartItems.length;
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [query, setQuery] = useState('');
+
+  useEffect(() => {
+    if (location.pathname === '/products') {
+      const q = new URLSearchParams(location.search).get('search') || '';
+      setQuery(q);
+    }
+  }, [location]);
 
   return (
     <>
@@ -66,6 +77,15 @@ export const Header: React.FC = () => {
           >
             <input
               type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  const q = query.trim();
+                  if (q) navigate(`/products?search=${encodeURIComponent(q)}`);
+                  else navigate('/products');
+                }
+              }}
               placeholder="Pesquise por produtos..."
               style={{
                 flex: 1,
@@ -76,7 +96,14 @@ export const Header: React.FC = () => {
                 color: "black",
               }}
             />
-            <SearchOutlined style={{ color: "#1677ff", fontSize: "18px" }} />
+            <SearchOutlined
+              style={{ color: "#1677ff", fontSize: "18px", cursor: 'pointer' }}
+              onClick={() => {
+                const q = query.trim();
+                if (q) navigate(`/products?search=${encodeURIComponent(q)}`);
+                else navigate('/products');
+              }}
+            />
           </div>
         </div>
 

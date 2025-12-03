@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   List,
   Spin,
@@ -42,6 +43,14 @@ export const ProductsPage: React.FC = () => {
   const [editOpen, setEditOpen] = useState(false);
   const [productToEdit, setProductToEdit] = useState<Product | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // initialize searchTerm from URL param `search`
+  useEffect(() => {
+    const q = new URLSearchParams(location.search).get('search') || '';
+    setSearchTerm(q);
+  }, [location.search]);
 
   useEffect(() => {
     setLoading(true);
